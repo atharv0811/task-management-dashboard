@@ -18,7 +18,7 @@ const Navbar = () => {
                 <div>
                     <div className="flex items-center gap-6">
                         <div className="flex items-center gap-1 cursor-pointer">
-                            <span>Located</span> <ChevronDown size={15} className="mt-1" />
+                            <span>Located</span> <ChevronDown size={15} />
                         </div>
                         <span className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center cursor-pointer">
                             A

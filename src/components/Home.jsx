@@ -3,10 +3,12 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import TaskActions from "./TaskActions";
 import CardsSection from "./CardsSection";
-import { tabs, cardsTitle } from '../data/Data.js'
+import { tabs, cardsTitle } from "../data/Data.js";
 
 const Home = () => {
     const [activeTab, setActiveTab] = useState(tabs[0].id);
+    const [collapsedCards, setCollapsedCards] = useState({});
+    const [isAllCollapsed, setIsAllCollapsed] = useState(false);
     const tabRefs = useRef({});
     const underlineRef = useRef(null);
 
@@ -23,6 +25,21 @@ const Home = () => {
             });
         }
     }, [activeTab]);
+
+    const toggleCardCollapse = (idx) => {
+        setCollapsedCards((prev) => ({
+            ...prev,
+            [idx]: !prev[idx],
+        }));
+    };
+
+    const toggleAllCards = () => {
+        const newState = !isAllCollapsed;
+        setIsAllCollapsed(newState);
+        setCollapsedCards(
+            Object.fromEntries(cardsTitle.map((_, idx) => [idx, newState]))
+        );
+    };
 
     return (
         <div className="h-full overflow-y-auto no-scrollbar">
@@ -49,16 +66,21 @@ const Home = () => {
 
             <hr className="border border-gray-200" />
 
-            <TaskActions />
+            <TaskActions toggleAllCards={toggleAllCards} isAllCollapsed={isAllCollapsed} />
 
             <hr className="border border-[#E95420]" />
 
             <div className="h-full mx-6 my-3 flex items-start gap-3">
-                {cardsTitle.map(
-                    (data, idx) => (
-                        <CardsSection key={idx} title={data.title} color={data.color} add={data.add} />
-                    )
-                )}
+                {cardsTitle.map((data, idx) => (
+                    <CardsSection
+                        key={idx}
+                        title={data.title}
+                        color={data.color}
+                        add={data.add}
+                        isCollapsed={collapsedCards[idx] || false}
+                        toggleCollapse={() => toggleCardCollapse(idx)}
+                    />
+                ))}
             </div>
         </div>
     );
